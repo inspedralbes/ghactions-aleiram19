@@ -20,6 +20,6 @@ jobs:
           echo "Acción desplegant a producció" > /web/last_deploy.txt
           date >> /web/last_deploy.txt
           scp -r -o StrictHostKeyChecking=no -i "~/prod_key.pem" -o UserKnownHostsFile=/dev/null -P 22 /home/aleiram/ghactions-aleiram19/* 
-          ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }}:/home/aleiram/web/public_html/actions/
+          ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }}:/home/a23aleminram/web/public_html/actions/
       
       - run: echo "📊 This job's status is ${{ job.status }}."
