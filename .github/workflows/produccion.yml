@@ -1,24 +1,42 @@
-name: Preparar per producció
-run-name: ${{ github.actor }} está pujant l'aplicació a PROD ✅
+name: Desplegar Vue a Producción
+run-name: ${{ github.actor }} está desplegando la aplicación Vue a PROD ✅
 
 on:
   push:
     branches: [ main ]
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Obtenir el codi del repositori
+      - name: Obtener el código del repositorio
         uses: actions/checkout@v4
-      
-      - name: scp a producció
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Instalar dependencias
+        run: |
+          cd vue-project
+          npm ci
+
+      - name: Construir aplicación Vue
+        run: |
+          cd vue-project
+          npm run build
+
+      - name: Preparar para despliegue
+        run: |
+          echo "Acción desplegando a producción" > last_deploy.txt
+          date >> last_deploy.txt
+
+      - name: Desplegar a producción
         run: |
           echo "${{ secrets.PROD_KEY }}" > ~/prod_key.pem
           chmod 600 ~/prod_key.pem
-          cd ${{ github.workspace }}
-          echo "Acción desplegant a producció" > last_deploy.txt
-          date >> last_deploy.txt
-          scp -r -o StrictHostKeyChecking=no -i "~/prod_key.pem" -o UserKnownHostsFile=/dev/null ./* ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }}:/home/a23aleminram/web/a23aleminram.daw.inspedralbes.cat/public_html/actions
-      
+          scp -r -o StrictHostKeyChecking=no -i "~/prod_key.pem" -o UserKnownHostsFile=/dev/null vue-project/dist/* ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }}:/home/a23aleminram/web/a23aleminram.daw.inspedralbes.cat/public_html/vue-app
+          scp -r -o StrictHostKeyChecking=no -i "~/prod_key.pem" -o UserKnownHostsFile=/dev/null last_deploy.txt ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }}:/home/a23aleminram/web/a23aleminram.daw.inspedralbes.cat/public_html/vue-app
+
       - run: echo "📊 This job's status is ${{ job.status }}."
