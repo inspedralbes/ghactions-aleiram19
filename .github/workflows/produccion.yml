@@ -21,11 +21,20 @@ jobs:
         run: |
           cd vue-project
           npm ci
+          # Verificar que el directorio assets existe
+          mkdir -p src/assets
 
       - name: Construir aplicación Vue
         run: |
           cd vue-project
+          # Mostrar estructura de directorios para depuración
+          ls -la src/
+          ls -la src/assets/ || echo "No assets directory found"
+          ls -la public/ || echo "No public directory found"
+          # Construir la aplicación
           npm run build
+          # Verificar la construcción
+          ls -la dist/ || echo "No dist directory found"
 
       - name: Preparar para despliegue
         run: |
