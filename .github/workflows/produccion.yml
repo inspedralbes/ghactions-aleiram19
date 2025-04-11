@@ -17,8 +17,6 @@ jobs:
           echo "${{ secrets.PROD_KEY }}" > ~/prod_key.pem
           chmod 600 ~/prod_key.pem
           cd ${{ github.workspace }}
-          echo "Acción desplegant a producció" > /web/last_deploy.txt
-          date >> /web/last_deploy.txt
           scp -r -o StrictHostKeyChecking=no -i "~/prod_key.pem" -o UserKnownHostsFile=/dev/null -P 22 /home/aleiram/ghactions-aleiram19/* 
           ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }}:/home/a23aleminram/web/public_html/actions/
       
