@@ -1,16 +1,38 @@
-# transversals
-Esquema mínim de carpetes pels projectes transversals
+# GitHub Actions - Despliegue a Producción
 
-És obligatori seguir aquesta estructura tot i que la podeu ampliar.
+Este repositorio contiene un flujo de trabajo de GitHub Actions para desplegar automáticamente a producción.
 
-## Atenció
-Un cop comenceu heu de canviar aquesta explicació amb la corresponent al vostre projecte (utilitzant markdown)
+## Flujo de trabajo
 
-# Aquest fitxer ha de contenir com a mínim:
- * Nom dels integrants
- * Nom del projecte
- * Petita descripció
- * Adreça del gestor de tasques (taiga, jira, trello...)
- * Adreça del prototip gràfic del projecte (Penpot, figma, moqups...)
- * URL de producció (quan la tingueu)
- * Estat: (explicació d'en quin punt està)
+El flujo de trabajo se ejecuta cuando se realiza un push a la rama `main` y realiza las siguientes acciones:
+
+1. Obtiene el código del repositorio
+2. Despliega los archivos mediante SCP al servidor de producción
+
+## Configuración
+
+Para que el flujo de trabajo funcione correctamente, necesitas configurar los siguientes secretos en tu repositorio de GitHub:
+
+- `PROD_KEY`: La clave SSH privada para conectar al servidor
+- `PROD_USER`: El usuario para la conexión SSH
+- `PROD_HOST`: La dirección del servidor de producción
+
+## Estructura de archivos
+
+```
+.
+├── .github
+│   └── workflows
+│       └── produccion.yml    # Archivo de configuración del flujo de trabajo
+└── README.md                # Este archivo
+```
+
+## Uso
+
+Simplemente realiza un push a la rama `main` y el flujo de trabajo se activará automáticamente:
+
+```bash
+git add .
+git commit -m "Actualización para producción"
+git push origin main
+```
